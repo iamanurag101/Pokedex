@@ -1,20 +1,16 @@
 import React from 'react';
-import { Route, createBrowserRouter, createRoutesFromElements, RouterProvider } from 'react-router-dom';
-import MainLayout from './layouts/MainLayout'
-import HomePage from './pages/HomePage';
-import NotFoundPage from './pages/NotFoundPage';
+import PokeCard from './components/PokeCard';
+import NavBar from './components/Navbar';
 
 const App = () => {
-  
-  const router = createBrowserRouter(
-    createRoutesFromElements(
-      <Route path='/' element={<MainLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path='*' element={<NotFoundPage />} />
-      </Route>
-    )
-  )
-  return <RouterProvider router={router} />
+  return (
+    <>
+      <NavBar />
+      <main className='bg-themeWhite font-poppins'>
+        <PokeCard />
+      </main>
+    </>
+  );
 }
 
-export default App
+export default App;
