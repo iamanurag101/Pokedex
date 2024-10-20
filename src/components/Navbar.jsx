@@ -7,11 +7,6 @@ const Navbar = () => {
   const [searchResults, setSearchResults] = useState([]);
   const [selectedPokemon, setSelectedPokemon] = useState(null);
 
-  const linkClass = ({ isActive }) =>
-    isActive
-      ? 'bg-orange text-white rounded-md px-3 py-2'
-      : 'text-white rounded-md px-3 py-2';
-
   const debounce = (func, delay) => {
     let debounceTimer;
     return function (...args) {
@@ -64,28 +59,32 @@ const Navbar = () => {
       <nav className="bg-themeWhite border-b border-black">
         <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
           <div className="flex h-20 items-center justify-between">
-            <div className="flex flex-1 items-center justify-center md:items-stretch md:justify-start">
-              {/* <!-- Logo --> */}
-              <NavLink className="flex flex-shrink-0 items-center mr-4" to="/">
+            <div className="flex items-center">
+              {/* Logo */}
+              <NavLink className="flex flex-shrink-0 items-center" to="/">
                 <img
                   className="h-10 w-auto"
                   src='/Logo.png'
                   alt="Pokedex"
                 />
               </NavLink>
-              {/* Search Input */}
+            </div>
+
+            {/* Search Input */}
+            <div className="ml-auto flex items-center">
               <input
                 type="text"
-                className="ml-4 p-2 rounded-md border border-gray-300"
+                className="p-2 rounded-md border border-gray-300"
                 placeholder="Search Pokémon"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
+
           {/* Search Results */}
           {searchResults.length > 0 && (
-            <div className="absolute bg-white border border-gray-300 rounded-md mt-2 w-full max-w-md">
+            <div className="absolute bg-white border border-gray-300 rounded-md mt-2 w-full max-w-md right-2 z-50">
               <ul>
                 {searchResults.map((pokemon) => (
                   <li
@@ -101,6 +100,7 @@ const Navbar = () => {
           )}
         </div>
       </nav>
+
       {/* Selected Pokémon Details */}
       {selectedPokemon && (
         <div className="selected-pokemon-details p-4">
