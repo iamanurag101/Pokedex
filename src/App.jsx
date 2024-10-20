@@ -1,5 +1,5 @@
 import React from 'react';
-import PokeCard from './components/PokeCard';
+import PokeCard from './components/HomePage';
 import NavBar from './components/Navbar';
 
 const App = () => {
