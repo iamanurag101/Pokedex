@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { NavLink } from 'react-router-dom';
 import axios from 'axios';
+import { MagnifyingGlass } from 'phosphor-react';
 
-const Navbar = () => {
+const Navbar = ({ setSearchResults, setShowSearchResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
-  const [selectedPokemon, setSelectedPokemon] = useState(null);
 
   const debounce = (func, delay) => {
     let debounceTimer;
@@ -19,6 +18,7 @@ const Navbar = () => {
   const handleSearch = async (query) => {
     if (query.length === 0) {
       setSearchResults([]);
+      setShowSearchResults(false);
       return;
     }
     try {
@@ -32,11 +32,12 @@ const Navbar = () => {
           return {
             name: pokemon.name,
             id: details.data.id,
-            image: details.data.sprites.front_default,
+            image: details.data.sprites.other.dream_world.front_default || details.data.sprites.front_default,
           };
         })
       );
       setSearchResults(detailedResults);
+      setShowSearchResults(true);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
@@ -48,68 +49,37 @@ const Navbar = () => {
     debouncedSearch(searchQuery);
   }, [searchQuery, debouncedSearch]);
 
-  const handlePokemonClick = (pokemon) => {
-    setSelectedPokemon(pokemon);
-    setSearchQuery('');
-    setSearchResults([]);
-  };
-
   return (
-    <>
-      <nav className="bg-themeWhite border-b border-black">
-        <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-          <div className="flex h-20 items-center justify-between">
-            <div className="flex items-center">
-              {/* Logo */}
-              <NavLink className="flex flex-shrink-0 items-center" to="/">
-                <img
-                  className="h-10 w-auto"
-                  src='/Logo.png'
-                  alt="Pokedex"
-                />
-              </NavLink>
-            </div>
+    <nav className="bg-gradient-to-r from-white via-gray-100 to-white shadow-md">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
+          <div className="flex items-center">
+            {/* Logo */}
+            <NavLink className="flex items-center" to="/">
+              <img
+                className="h-12 w-auto transition-transform duration-300 transform hover:scale-125"
+                src='/Logo.png'
+                alt="Pokedex"
+              />
+            </NavLink>
+          </div>
 
-            {/* Search Input */}
-            <div className="ml-auto flex items-center">
+          {/* Search Input */}
+          <div className="ml-auto flex items-center">
+            <div className="relative">
+              <MagnifyingGlass className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                className="p-2 rounded-md border border-gray-300"
+                className="p-2 pl-10 rounded-full border border-gray-300 focus:border-blue-500 focus:ring focus:ring-blue-200 transition duration-300 shadow-lg hover:shadow-xl"
                 placeholder="Search Pokémon"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
             </div>
           </div>
-
-          {/* Search Results */}
-          {searchResults.length > 0 && (
-            <div className="absolute bg-white border border-gray-300 rounded-md mt-2 w-full max-w-md right-2 z-50">
-              <ul>
-                {searchResults.map((pokemon) => (
-                  <li
-                    key={pokemon.name}
-                    className="p-2 hover:bg-gray-200 cursor-pointer"
-                    onClick={() => handlePokemonClick(pokemon)}
-                  >
-                    {pokemon.name}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
         </div>
-      </nav>
-
-      {/* Selected Pokémon Details */}
-      {selectedPokemon && (
-        <div className="selected-pokemon-details p-4">
-          <h2 className="text-2xl font-bold">{selectedPokemon.name}</h2>
-          <img src={selectedPokemon.image} alt={selectedPokemon.name} />
-          <p>ID: {selectedPokemon.id}</p>
-        </div>
-      )}
-    </>
+      </div>
+    </nav>
   );
 };
 
